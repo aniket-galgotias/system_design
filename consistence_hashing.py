@@ -23,12 +23,31 @@ class ConsistenceHashing:
                 new_server_node = Node(server)
                 self.node.append(new_server_key)
                 if server_hash_value not in self.hash_ring:
-                    self.hash_ring[server_hash_value] = new_server_key
+                    self.hash_ring[server_hash_value] = new_server_node
             respnse = {"message":"server added successfully"}
         except Exception :
             respnse = {"message": "something went wrong, Please try again."}
         return respnse
     
     
+    def remove_server(self,remove_server):
+        response = {}
+        if remove_server is None:
+            response['error'] = "Please provide valid server."
+        if response.get('error',''):
+            return response
+        try:
+            node_list = [node for node in self.node if node.key==remove_server]
+            for remove_server_node in node_list:
+                self.node.remove(remove_server_node)
+                for replica_server in range(self.virtual):
+                    remove_server_key = f"{remove_server}:{replica_server}"
+                    hash_value = hashlib.md5(remove_server_key.encode()).hexdigest()
+                    if hash_value in self.hash_ring:
+                        del self.hash_ring[hash_value]
+            respnse = {"message":"server removed successfully"}
+        except Exception:
+             respnse = {"message": "something went wrong, Please try again."}
+        return response
             
             
