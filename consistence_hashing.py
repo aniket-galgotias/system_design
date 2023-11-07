@@ -56,7 +56,7 @@ class ConsistenceHashing:
             return None
         response = {}
         try:
-            insert_data_hash_value = hashlib.md5(data.encode()).hexdigest()
+            insert_data_hash_value = hashlib.md5(data.e3ncode()).hexdigest()
             for hash_value,server_node in self.hash_ring.items():
                 if hash_value >= insert_data_hash_value:
                     response = {"message":"Data store at server_node :" f"{hash_value}"}
