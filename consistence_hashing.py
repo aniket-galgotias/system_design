@@ -49,5 +49,21 @@ class ConsistenceHashing:
         except Exception:
              respnse = {"message": "something went wrong, Please try again."}
         return response
+    
+    
+    def get_data_store_node(self,data):
+        if data is None:
+            return None
+        response = {}
+        try:
+            insert_data_hash_value = hashlib.md5(data.encode()).hexdigest()
+            for hash_value,server_node in self.hash_ring.items():
+                if hash_value >= insert_data_hash_value:
+                    response = {"message":"Data store at server_node :" f"{hash_value}"}
+                    return response
+            return self.hash_ring[0]
+        except Exception:
+            response = {"message": "something went wrong, Please try again."}
+        return response
             
             
